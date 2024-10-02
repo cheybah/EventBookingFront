@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap');
+
+
+.hp-room-item.set-bg1{
+  background: url(../../../assets/img/room/room-b1.jpg);
+}
+.set-bg2{
+  background: url(../../../assets/img/room/room-b2.jpg);
+}
+.set-bg3{
+  background: url(../../../assets/img/room/room-b3.jpg);
+}
+.set-bg4{
+  background: url(../../../assets/img/room/room-b4.jpg);
+}
