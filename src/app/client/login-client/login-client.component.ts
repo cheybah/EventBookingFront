@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/services/auth.service';
 
 @Component({
   selector: 'app-login-client',
@@ -14,21 +15,39 @@ export class LoginClientComponent {
 
     constructor(
       private router: Router,
-      //private authService: AuthService
+      private authService: AuthService
     ) { }
 
     signIn(): void {
-      /*this.authService.signIn(this.email, this.password).subscribe(users => {
-        if (users.length > 0) {
-          console.log('User authenticated', users[0].id);
-          this.router.navigate(['/dashboard', users[0].id]);
-        } else {
-          console.log('Invalid email or password');
-          // Show an error message
-          this.authenticationError = true;
+        if (this.email && this.password) {
+          const credentials = {
+            email: this.email,
+            password: this.password
+          };
+
+          this.authService.login(credentials).subscribe(
+            response => {
+              console.log('Login successful', response);
+
+              // Check if the role exists in the response and store it
+              if (response.user && response.user.role) {
+                localStorage.setItem('userRole', response.user.role);
+              } else {
+                console.error('Role not found in the response');
+              }
+
+
+              this.router.navigate(['/home']); // Navigate to home or another route on success
+            },
+            error => {
+              console.error('Login failed', error);
+
+              this.authenticationError = true; // Show error message
+            }
+          );
         }
-      });*/
-    }
+      }
+
 
     goToHome(): void {
       this.router.navigate(['/home']);

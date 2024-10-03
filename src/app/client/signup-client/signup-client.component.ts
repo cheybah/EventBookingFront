@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/services/auth.service';
 
 @Component({
   selector: 'app-signup-client',
@@ -9,34 +10,39 @@ import { Router } from '@angular/router';
 })
 export class SignupClientComponent {
   signupError: boolean = false;  // Define signupError here
-  signupForm: FormGroup;
-
+  name: string = '';
+  email: string = '';
+  password: string = '';
+  password_confirmation: string = '';
 
 constructor(
   private router: Router,
-  private fb: FormBuilder
+  private fb: FormBuilder,
+  private authService: AuthService
 ) {
-    this.signupForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required],
-      terms: [false, Validators.requiredTrue]
-    });
 
   }
 
   signUp(): void {
-    /*this.authService.signIn(this.email, this.password).subscribe(users => {
-      if (users.length > 0) {
-        console.log('User authenticated', users[0].id);
-        this.router.navigate(['/dashboard', users[0].id]);
-      } else {
-        console.log('Invalid email or password');
-        // Show an error message
-        this.authenticationError = true;
+    console.log('SignUp triggered');  // Add this for debugging
+
+    const userData = {
+      name: this.name,
+      email: this.email,
+      password: this.password,
+      password_confirmation: this.password_confirmation
+    };
+
+    this.authService.registerClient(userData).subscribe({
+      next: (response) => {
+        console.log('Registration successful', response);
+        this.goToHome();  // Redirect after successful registration
+      },
+      error: (error) => {
+        console.error('Registration failed', error);
+        this.signupError = true;
       }
-    });*/
+    });
   }
 
   goToHome(): void {
