@@ -1,0 +1,71 @@
+<!-- ======= Top Bar ======= -->
+<app-topbar></app-topbar>
+
+<!-- ======= Signup Section ======= -->
+<section id="login" class="d-flex align-items-center">
+<div class="container position-relative">
+  <div class="box">
+    <h2>Sign Up</h2>
+    <form (submit)="signUp()">
+      <!-- Name Field -->
+      <div class="inputBox">
+        <input type="text"
+                name="name"
+                required
+                onkeyup="this.setAttribute('value', this.value);" value="">
+        <label>Name</label>
+      </div>
+
+      <!-- Email Field -->
+      <div class="inputBox">
+        <input type="email"
+                name="email"
+                required
+                onkeyup="this.setAttribute('value', this.value);" value="">
+        <label>Email</label>
+      </div>
+
+      <!-- Password Field -->
+      <div class="inputBox">
+        <input type="password" name="password"
+                required
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+                onkeyup="this.setAttribute('value', this.value);" value="">
+        <label>Password</label>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="inputBox">
+        <input type="password" name="confirm_password"
+                required
+                onkeyup="this.setAttribute('value', this.value);" value="">
+        <label>Confirm Password</label>
+      </div>
+
+      <!-- Terms and Conditions -->
+      <div class="terms-container">
+        <input type="checkbox" id="terms" name="terms" required>
+        <label for="terms" >I agree to the <a href="#">terms and conditions</a></label>
+      </div>
+
+      <div *ngIf="signupError" class="alert alert-danger" role="alert">
+        Please check your details and try again.
+      </div>
+
+      <!-- Submit Button -->
+      <input type="submit" name="sign-up" value="Sign Up">
+    </form>
+
+    <!-- Link to Login Page -->
+    <div class="additional-links">
+      <p class="signup-link">Already have an account? <a [routerLink]="['/client/login']">Log in!</a></p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Copyright Section -->
+<div class="copyright">
+&copy; Copyright <strong><span>Sona Co.</span></strong> All Rights Reserved
+</div>

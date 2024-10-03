@@ -1,0 +1,23 @@
+@import url('../login-client/login-client.component.css');
+
+.terms-container {
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.terms-container input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.terms-container label {
+  font-size: 12px;
+  color: #fff;
+  text-align: right;
+}
+
+.terms-container a {
+  color: #fff;
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -21,6 +21,7 @@ import { EventsComponent } from './events/events.component';
     BlogComponent,
     EventsComponent
   ],
+  exports: [TopbarComponent],
   imports: [
     CommonModule,
     HomeRoutingModule
