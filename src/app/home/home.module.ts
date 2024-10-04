@@ -9,6 +9,7 @@ import { ServicesComponent } from './services/services.component';
 import { FooterComponent } from './footer/footer.component';
 import { BlogComponent } from './blog/blog.component';
 import { EventsComponent } from './events/events.component';
+import { SeperatorComponent } from './seperator/seperator.component';
 
 
 @NgModule({
@@ -19,9 +20,12 @@ import { EventsComponent } from './events/events.component';
     ServicesComponent,
     FooterComponent,
     BlogComponent,
-    EventsComponent
+    EventsComponent,
+    SeperatorComponent
   ],
-  exports: [TopbarComponent],
+  exports: [TopbarComponent,
+    SeperatorComponent
+  ],
   imports: [
     CommonModule,
     HomeRoutingModule

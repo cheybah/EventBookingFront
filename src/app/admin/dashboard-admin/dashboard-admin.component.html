@@ -1,0 +1,309 @@
+
+<app-topbar></app-topbar>
+<!-- ======= Home Section ======= -->
+<section id="hero" class="d-flex align-items-center">
+  <style>
+    a{
+      cursor: pointer;
+    }
+  </style>
+  <div class="container position-relative">
+    <h1>Welcome, {{user.name}}</h1>
+    <h2>Sona Event Booker Administration</h2>
+    <a class="btn-get-started scrollto" (click)="scrollToSection('listofevents')">Consult Events</a>
+    <a  class="btn-get-started scrollto" (click)="scrollToSection('formevent')">Add Event</a>
+  </div>
+</section>
+
+<section id="listofevents" class="publicpots">
+  <div class="section-title">
+    <span>Event List</span>
+    <h2>Event List</h2>
+    <p>Consult, create and make changes however you want</p>
+  </div>
+  <div class="table-container">
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="goToCreateEvent()">
+        <i class="bi bi-plus-circle fa-2x"></i> Add New Event
+      </button>
+    </div>
+    <table class="table table-striped">
+      <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Category</th>
+      <th scope="col">Event Date</th>
+      <th scope="col">Available Seats</th>
+    </tr>
+    </thead>
+      <tbody>
+    <tr *ngFor="let event of userEvents; index as i">
+      <th scope="row">{{i + 1}}</th>
+      <td>{{event.name}}</td>
+      <td>{{event.description}}</td>
+      <td>{{event.category}}</td>
+      <td>{{event.event_date | date:'dd MMMM yyyy'}}</td>
+      <td>{{event.available_seats}}</td>
+      <td>
+        <button type="button" class="btn btn-primary" (click)="displayEvent(event)">
+          <i class="bi bi-box-arrow-up-right fa-2x"></i>
+        </button>
+        <button type="button" class="btn btn-success" (click)="OpenEditEvent(event)">
+          <i class="bi bi-gear fa-2x"></i>
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteEvent(event)">
+          <i class="bi bi-trash fa-2x"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+    </table>
+  </div>
+</section>
+
+<app-seperator></app-seperator> <!--check this later-->
+
+<!-- add event form -->
+<section id="formevent" class="publicpots">
+  <div class="section-title">
+    <span>Event Form</span>
+    <h2>Event Form</h2>
+    <p>Fill out the form below to add an event</p>
+  </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="card shadow col-lg-8">
+          <div class="card-body">
+            <form [formGroup]="eventForm" (ngSubmit)="onSubmitEvent()">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="form-group">
+                    <label for="title" class="form-label">Title :</label>
+                    <input type="text" class="form-control" id="name" formControlName="name">
+                    <div *ngIf="eventForm.get('name')?.invalid && (eventForm.get('name')?.dirty || eventForm.get('name')?.touched)" class="text-danger">
+                      <div *ngIf="eventForm.get('name')?.hasError('required')" style="margin-top: 3px;">Title is required.</div>
+                    </div>
+                </div>
+              </div>
+                <div class="col-md-6 mb-3"> <!--new added column-->
+                  <label for="category" class="form-label">Category :</label>
+                  <select class="form-select" id="category" formControlName="category">
+                    <option value="" selected>Select Category</option>
+                    <option *ngFor="let category of categories" [value]="category.value">{{ category.label }}</option>
+                  </select>
+                  <div *ngIf="eventForm.get('category')?.invalid && (eventForm.get('category')?.dirty || eventForm.get('category')?.touched)" class="text-danger">
+                    <div *ngIf="eventForm.get('category')?.hasError('required')" style="margin-top: 3px;">Category is required.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <div class="form-group">
+                    <label for="available_seats">Available Seats :</label>
+                    <input type="number" class="form-control" id="available_seats" formControlName="available_seats">
+                    <div *ngIf="eventForm.get('available_seats')?.invalid && (eventForm.get('available_seats')?.dirty || eventForm.get('available_seats')?.touched)" class="text-danger">
+                      <div *ngIf="eventForm.get('available_seats')?.hasError('required')">Seats number is required.</div>
+                      <div *ngIf="eventForm.get('available_seats')?.hasError('min')">Seats number should be superior to 0.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="event_date" class="form-label">Event Date :</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="event_date"
+                    formControlName="event_date"
+                    [min]="minDate()"
+                    required
+                  />
+                  <div *ngIf="eventForm.get('event_date')?.invalid && (eventForm.get('event_date')?.dirty || eventForm.get('event_date')?.touched)" class="text-danger">
+                    <div *ngIf="eventForm.get('event_date')?.hasError('required')">Event Date is required.</div>
+                  </div>
+              </div>
+              </div>
+              <div class="mb-3">
+                <label for="img" class="form-label">Image Source</label>
+                <input type="file" class="form-control" id="img" formControlName="img" (change)="onFileSelected($event)" accept="image/*">
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" formControlName="description"></textarea>
+                <div *ngIf="eventForm.get('description')?.invalid && (eventForm.get('description')?.dirty || eventForm.get('description')?.touched)" class="text-danger">
+                  <div *ngIf="eventForm.get('description')?.hasError('required')" style="margin-top: 3px;">Description is required.</div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn1">Submit</button>
+            </form>
+          </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<!-- display event modal -->
+<div class="modal fade" id="potModal" tabindex="-1" aria-labelledby="potModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="potModalLabel">{{ selectedEvent.name }} Event Infomation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body1">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-6">
+              <img class="w-100 shadow img" [src]="selectedEvent.img" alt="{{ selectedEvent.name }}" />
+            </div>
+            <div class="col-lg-6">
+              <div class="pot-container1 p-c mt-c">
+                <div class="pot-header">
+                  <h2 class="titleS"><b>{{ selectedEvent.name }}</b></h2>
+                </div>
+                <h5>Description</h5>
+                <p>{{ selectedEvent.description }}</p>
+                <h5 class="mt-4">Category</h5>
+                <p>{{ selectedEvent.category }}</p>
+                <h5 class="mt-4">Available Seats</h5>
+                <div class="progress-container">
+                  <span class="progress-bar">
+                    <span class="progress-indicator" [style.width]="calculateProgress(selectedEvent)"></span>
+                  </span>
+                </div>
+                <div class="amount-label-container">
+                  <span class="amount-label amount-left"><i class="bi bi-check2-circle"></i>&nbsp;Current: {{ selectedEvent.booked_seats }}</span>
+                  <span class="amount-label amount-right"><i class="bi bi-people-fill"></i>&nbsp;Available: {{ selectedEvent.available_seats }}</span>
+                </div>
+                <span class="amount-label calen"><i class="bi bi-calendar-check"></i>&nbsp;Deadline: {{ selectedEvent.event_date | date:'longDate' }}</span>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- edit pot modal -->
+<div class="modal fade" id="editPotModal" tabindex="-1" aria-labelledby="editPotModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editPotModalLabel">Edit Event</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="eventEditForm">
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <label for="title_e" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title_e" name="name" formControlName="name" [attr.disabled]="isTitleCategoryDisabled()">
+                <small class="text-muted">Title can't be updated</small>
+              </div>
+            </div>
+            <div class="col">
+              <div class="mb-3">
+                <label for="category_e" class="form-label">Category</label>
+                <input type="text" class="form-control" id="category_e" name="category" formControlName="category" [attr.disabled]="isTitleCategoryDisabled()">
+                <small class="text-muted">Category can't be updated</small>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <label for="target_amount_e" class="form-label">Target Amount</label>
+                <input type="number" class="form-control" id="target_amount_e" name="target_amount" formControlName="target_amount">
+                <div *ngIf="eventEditForm.get('target_amount')?.invalid" class="text-danger">
+                  <div *ngIf="eventEditForm.get('target_amount')?.hasError('required')">Target Amount is required.</div>
+                  <div *ngIf="eventEditForm.get('target_amount')?.hasError('min')">Target Amount should be superior to 0.</div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="mb-3">
+                <label for="deadline_e" class="form-label">Deadline</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="deadline_e"
+                  name="deadline"
+                  formControlName="deadline"
+                  [min]="minDate()"
+                  required
+                />
+                <div *ngIf="eventEditForm.get('deadline')?.invalid" class="text-danger">
+                  <div *ngIf="eventEditForm.get('deadline')?.hasError('required')">Deadline is required.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="description_e" class="form-label">Description</label>
+            <textarea class="form-control" id="description_e" name="description" formControlName="description"></textarea>
+            <div *ngIf="eventEditForm.get('description')?.invalid" class="text-danger">
+              <div *ngIf="eventEditForm.get('description')?.hasError('required')" style="margin-top: 3px;">Description is required.</div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" (click)="updateEvent()"
+                data-bs-dismiss="modal"
+                [disabled]="eventEditForm.invalid">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- confirmation modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Confirm Update</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to update the event?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="confirmUpdate()" data-bs-dismiss="modal">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- confirmation modal for delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete the event?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()" data-bs-dismiss="modal">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
