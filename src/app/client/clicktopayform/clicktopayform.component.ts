@@ -4,8 +4,9 @@ import { EventService } from 'src/services/event.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/services/auth.service';
+import Swal from 'sweetalert2';
 
-
+declare let Email: any;
 
 @Component({
   selector: 'app-clicktopayform',
@@ -59,6 +60,23 @@ export class ClicktopayformComponent {
       return;
     }
 
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to proceed with the payment?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, proceed!',
+      cancelButtonText: 'No, cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.processPayment();
+      }
+    });
+  }
+
+  processPayment(): void {
     const seats = this.paymentForm.value.seats;
     if (seats > this.event.available_seats - this.event.booked_seats) {
       alert('Not enough available seats');
@@ -75,9 +93,41 @@ export class ClicktopayformComponent {
     };
 
     this.bookingService.createBooking(booking).subscribe(() => {
-      alert('Booking successful');
-      this.router.navigate([`/event/${this.event.id}`]);
+      this.sendMail();
+      Swal.fire({
+        icon: 'success',
+        title: 'Payment Successful',
+        text: 'Your booking has been confirmed!',
+        confirmButtonColor: '#B48F44',
+        timer: 3000
+      }).then(() => {
+        this.router.navigate(['/client/dashboard']);
+      });
     });
-    console.log('Booking successful', this.paymentForm.value);
+  }
+
+  sendMail(): void {
+  let emailbody = `<h2>Thank you for booking with Sona!</h2>
+                      <br> This is your confirmation receipt for the event ${this.event.name}
+                      <br> Event Date: ${new Date(this.event.event_date).toLocaleDateString()}`;
+
+    Email.send({
+      Host: "smtp.elasticemail.com",
+      Username: "cheymabahroun@gmail.com",
+      Password: "2AE8FE0BC29A65363DE1866214A384F9B549",
+      Port: "2525",
+      To: this.paymentForm.value.email,
+      From: "cheymabahroun@gmail.com",
+      Subject: "Sona Booking Receipt",
+      Body: emailbody,
+    }).then(
+      (message: string) => {
+        if (message === "OK") {
+          console.log("Email sent successfully");
+        } else {
+          console.error("Failed to send email:", message);
+        }
+      }
+    );
   }
 }
