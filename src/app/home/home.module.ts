@@ -21,10 +21,15 @@ import { SeperatorComponent } from './seperator/seperator.component';
     FooterComponent,
     BlogComponent,
     EventsComponent,
-    SeperatorComponent
+    SeperatorComponent,
+
   ],
   exports: [TopbarComponent,
-    SeperatorComponent
+    SeperatorComponent,
+    FooterComponent,
+    ServicesComponent,
+    BlogComponent,
+    EventsComponent,
   ],
   imports: [
     CommonModule,

@@ -25,6 +25,7 @@ export class DashboardAdminComponent implements OnInit {
     userEvents: Event[]= [];
     eventForm: FormGroup;
     eventEditForm: FormGroup;
+    fileName: string | null = null;
     categories = [
       { id: 'categoryFestival', value: 'Festival', label: 'Festival' },
       { id: 'categoryConcert', value: 'Concert', label: 'Concert' },
@@ -39,7 +40,7 @@ export class DashboardAdminComponent implements OnInit {
       name: '',
       description: '',
       category: '',
-      event_date: new Date(),
+      event_date: '',
       booked_seats: 0,
       available_seats: 0,
       img: '',
@@ -90,6 +91,7 @@ goToCreateEvent(): void {
 }
 
 displayEvent(event: Event): void {
+  console.log("this is display event",event);
   this.selectedEvent = event;
   const modalElement = document.getElementById('eventModal');
   if (modalElement) {
@@ -98,6 +100,8 @@ displayEvent(event: Event): void {
   }
 }
 OpenEditEvent(event: Event): void {
+  console.log("this is update event",this.selectedEvent);
+
   this.selectedEvent = { ...event };
 
   this.eventEditForm.setValue({
@@ -106,6 +110,7 @@ OpenEditEvent(event: Event): void {
     category: event.category,
     event_date: event.event_date,
     available_seats: event.available_seats,
+    img: event.img || ''
   });
   const modalElement = document.getElementById('editEventModal');
   if (modalElement) {
@@ -127,13 +132,14 @@ deleteEvent(event: Event): void {
 }
 
 updateEvent(): void {
+
   const formValues = this.eventEditForm.value;
 
     // Update the selectedPot object
   this.selectedEvent.name = formValues.name;
   this.selectedEvent.category = formValues.category;
-  this.selectedEvent.available_seats = formValues.target_amount;
-  this.selectedEvent.event_date = formValues.deadline;
+  this.selectedEvent.available_seats = formValues.available_seats;
+  this.selectedEvent.event_date = formValues.event_date;
   this.selectedEvent.description = formValues.description;
   // Open the confirmation modal
   const confirmationModalElement = document.getElementById('confirmationModal');
@@ -144,15 +150,15 @@ updateEvent(): void {
 }
 
 onSubmitEvent() {
+  console.log('onSubmitEvent', this.eventForm.value);
   if (this.eventForm.valid) {
     const newP = {
       name: this.eventForm.value.name,
       description: this.eventForm.value.description,
       category: this.eventForm.value.category,
-      event_date: new Date(), //because the date is new
-      booked_seats: 0,
+      event_date: this.formatDate(new Date()), // Format the date correctly, gave me a headache for no reason
       available_seats: this.eventForm.value.available_seats,
-      img: this.eventForm.value.img
+      img: this.fileName ? `assets/img/${this.fileName}` : ''  // Set the img property to the static path
     };
 
     this.eventService.createEvent(newP).subscribe((event) => {
@@ -166,6 +172,13 @@ onSubmitEvent() {
   }
 }
 
+formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 private markFormGroupTouched(formGroup: FormGroup) {
   (Object as any).values(formGroup.controls).forEach((control: any) => {
     control.markAsTouched();
@@ -176,16 +189,10 @@ private markFormGroupTouched(formGroup: FormGroup) {
   });
 }
 
-onFileSelected(event: any): void {
-  const fileInput = event.target;
-  if (fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      // Assuming you have an "assets" folder in the root of your Angular project
-      const imagePath = `../assets/img/${file.name}`;
-      this.eventForm.value.img = imagePath;
-
-      // You can log or display the imagePath if needed
-      console.log('Selected Image Path:', imagePath);
+onFileChange(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+      this.fileName = file.name; // Store the file name
   }
 }
 
@@ -196,7 +203,7 @@ confirmUpdate(): void {
     this.getEvents();
 
     // Hide the edit modal
-    const editModalElement = document.getElementById('editPotModal');
+    const editModalElement = document.getElementById('editEventModal');
     if (editModalElement) {
       const editModal = new bootstrap.Modal(editModalElement);
       editModal.hide();

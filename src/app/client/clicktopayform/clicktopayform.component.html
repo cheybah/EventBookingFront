@@ -1,0 +1,157 @@
+<link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/checkout/">
+
+<body class="bg-light">
+<div class="container">
+<div class="py-5 text-center">
+  <img class="d-block mx-auto mb-4" src="../../../assets/img/logo.png" alt="" width="100" height="50">
+  <h2>Payment Form</h2>
+</div>
+<div class="row" style="margin-bottom: 5rem;">
+  <div class="col-md-4 order-md-2 mb-4">
+    <h4 class="d-flex justify-content-between align-items-center mb-3">
+      <span class="text-muted">Payment Info</span>
+      <span class="badge badge-secondary badge-pill">1</span>
+    </h4>
+    <ul class="list-group mb-3">
+      <li class="list-group-item d-flex justify-content-between lh-condensed">
+        <div>
+          <h6 class="my-0">{{ event.name }}</h6>
+          <small class="text-muted">{{ event.description }}</small>
+        </div>
+        <span class="text-muted">{{ event.available_seats }} TND</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between bg-light">
+        <div class="text-success">
+          <h6 class="my-0">Additional Fee</h6>
+          <small>In favor of the transaction</small>
+        </div>
+        <span class="text-success">1 TND</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between">
+        <span>Total (TND)</span>
+        <strong>{{ event.available_seats + 1 }}</strong>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-8 order-md-1">
+    <h4 class="mb-3">Billing address</h4>
+    <form [formGroup]="paymentForm" (ngSubmit)="submitForm()">
+      <div class="mb-3">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" formControlName="name" [value]="user?.name" required>
+        <div *ngIf="paymentForm.get('name')?.invalid && (paymentForm.get('name')?.dirty || paymentForm.get('name')?.touched)"
+              class="alert alert-danger" style="margin-top: 5px;">
+          <div *ngIf="paymentForm.get('name')?.hasError('required')">
+            Name is required.
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="email">Email</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">&#64;</span>
+          </div>
+          <input type="email" class="form-control" id="email" placeholder="you@example.com" formControlName="email" required>
+        </div>
+        <div *ngIf="paymentForm.get('email')?.invalid && (paymentForm.get('email')?.dirty || paymentForm.get('email')?.touched)"
+              class="alert alert-danger" style="margin-top: 5px;">
+          Please enter a valid email address.
+        </div>
+      </div>
+    <div class="mb-3">
+      <label for="seats">Number of Seats</label>
+      <input type="number" class="form-control" id="seats" formControlName="seats" min="1" [max]="event.available_seats - event.booked_seats" required>
+      <div *ngIf="paymentForm.get('seats')?.invalid && (paymentForm.get('seats')?.dirty || paymentForm.get('seats')?.touched)"
+            class="alert alert-danger" style="margin-top: 5px;">
+        <div *ngIf="paymentForm.get('seats')?.hasError('required')">
+          Number of seats is required.
+        </div>
+        <div *ngIf="paymentForm.get('seats')?.hasError('min') || paymentForm.get('seats')?.hasError('max')">
+          Please enter a valid number of seats.
+        </div>
+      </div>
+    </div>
+      <hr class="mb-4">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="saveInfo" formControlName="saveInfo">
+        <label class="custom-control-label" for="saveInfo">Save this information for next time</label>
+      </div>
+      <hr class="mb-4">
+      <h4 class="mb-3">Payment</h4>
+      <div class="d-block my-3">
+        <div class="custom-control custom-radio">
+          <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" formControlName="paymentMethod" value="credit" checked required>
+          <label class="custom-control-label" for="credit">Credit card</label>
+        </div>
+        <div class="custom-control custom-radio">
+          <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" formControlName="paymentMethod" value="debit" required>
+          <label class="custom-control-label" for="debit">Debit card</label>
+        </div>
+        <div class="custom-control custom-radio">
+          <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" formControlName="paymentMethod" value="paypal" required>
+          <label class="custom-control-label" for="paypal">PayPal</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="ccName">Name on card</label>
+          <input type="text" class="form-control" id="ccName" placeholder="" formControlName="ccName" required>
+          <small class="text-muted">Full name as displayed on card</small>
+          <div *ngIf="paymentForm.get('ccName')?.invalid && (paymentForm.get('ccName')?.dirty || paymentForm.get('ccName')?.touched)"
+                class="alert alert-danger" style="margin-top: 5px;">
+            <div *ngIf="paymentForm.get('ccName')?.hasError('required')">
+              Name is required.
+            </div>
+            <div *ngIf="paymentForm.get('ccName')?.hasError('pattern')">
+              Valid name is required and should contain only letters.
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="cc-number">Credit card number</label>
+          <input type="text" class="form-control" id="cc-number" placeholder="" formControlName="ccNumber" required>
+          <div *ngIf="paymentForm.get('ccNumber')?.invalid && (paymentForm.get('ccNumber')?.dirty || paymentForm.get('ccNumber')?.touched)"
+                class="alert alert-danger" style="margin-top: 5px;">
+            Credit card number is required and should contain 16 digits.
+          </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <label for="ccExpiration">Expiration</label>
+            <input type="text" class="form-control" id="ccExpiration" placeholder="" formControlName="ccExpiration" pattern="^(0[1-9]|1[0-2])\/\d{2}$" required>
+            <small class="text-muted">MM/YY format</small>
+            <div *ngIf="paymentForm.get('ccExpiration')?.invalid && (paymentForm.get('ccExpiration')?.dirty || paymentForm.get('ccExpiration')?.touched)"
+                  class="alert alert-danger" style="margin-top: 5px;">
+              <div *ngIf="paymentForm.get('ccExpiration')?.hasError('required')">
+                Expiration date required
+              </div>
+              <div *ngIf="paymentForm.get('ccExpiration')?.hasError('pattern')">
+                Valid expiration date is required and have MM/YY format.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="ccCvv">CVV</label>
+            <input type="text" class="form-control" id="ccCvv" placeholder="" formControlName="ccCvv" required>
+            <small class="text-muted">123</small>
+            <div *ngIf="paymentForm.get('ccCvv')?.invalid && (paymentForm.get('ccCvv')?.dirty || paymentForm.get('ccCvv')?.touched)"
+                  class="alert alert-danger" style="margin-top: 5px;">
+              <div *ngIf="paymentForm.get('ccCvv')?.hasError('required')">
+                Security code is required.
+              </div>
+              <div *ngIf="paymentForm.get('ccCvv')?.hasError('pattern')">
+                Valid security code is required and should contain 3 digits.
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="mb-4">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="paymentForm.invalid">Proceed</button>
+      </form>
+    </div>
+</div>
+</div>
+<app-footer></app-footer>

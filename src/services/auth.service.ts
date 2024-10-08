@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { User } from 'src/app/models/User';
 
 @Injectable({
   providedIn: 'root',
@@ -25,13 +26,20 @@ export class AuthService {
       tap((response: any) => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('role', response.role); // Save the role
+        localStorage.setItem('userId', response.user.id); // Save the user ID
+        console.log('User ID stored:', response.user.id); // Add this line for debugging
       })
     );
   }
 
   // Get the logged-in user
-  getUser(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user`);
+  getUser(id: number): Observable<User> {
+    const url = `${this.apiUrl}/user/${id}`;
+    return this.http.get<User>(url);
+  }
+
+  getAllUsers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users`);
   }
 }
 

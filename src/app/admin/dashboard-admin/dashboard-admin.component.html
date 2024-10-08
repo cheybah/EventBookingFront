@@ -24,7 +24,7 @@
   <div class="table-container">
     <div class="d-flex justify-content-end">
       <button type="button" class="btn btn-primary" (click)="goToCreateEvent()">
-        <i class="bi bi-plus-circle fa-2x"></i> Add New Event
+        <i class="bi bi-plus-circle"></i> Add New Event
       </button>
     </div>
     <table class="table table-striped">
@@ -48,13 +48,13 @@
       <td>{{event.available_seats}}</td>
       <td>
         <button type="button" class="btn btn-primary" (click)="displayEvent(event)">
-          <i class="bi bi-box-arrow-up-right fa-2x"></i>
+          <i class="bi bi-box-arrow-up-right"></i>
         </button>
         <button type="button" class="btn btn-success" (click)="OpenEditEvent(event)">
-          <i class="bi bi-gear fa-2x"></i>
+          <i class="bi bi-gear"></i>
         </button>
         <button type="button" class="btn btn-danger" (click)="deleteEvent(event)">
-          <i class="bi bi-trash fa-2x"></i>
+          <i class="bi bi-trash"></i>
         </button>
       </td>
     </tr>
@@ -73,7 +73,7 @@
     <p>Fill out the form below to add an event</p>
   </div>
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center addF">
       <div class="card shadow col-lg-8">
           <div class="card-body">
             <form [formGroup]="eventForm" (ngSubmit)="onSubmitEvent()">
@@ -126,7 +126,7 @@
               </div>
               <div class="mb-3">
                 <label for="img" class="form-label">Image Source</label>
-                <input type="file" class="form-control" id="img" formControlName="img" (change)="onFileSelected($event)" accept="image/*">
+                <input type="file" class="form-control" id="img" formControlName="img" (change)="onFileChange($event)" accept="image/*">
               </div>
               <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
@@ -144,11 +144,11 @@
 </section>
 
 <!-- display event modal -->
-<div class="modal fade" id="potModal" tabindex="-1" aria-labelledby="potModalLabel" aria-hidden="true">
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="potModalLabel">{{ selectedEvent.name }} Event Infomation</h5>
+        <h5 class="modal-title" id="eventModalLabel">{{ selectedEvent.name }} Event Infomation</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body1">
@@ -176,7 +176,7 @@
                   <span class="amount-label amount-left"><i class="bi bi-check2-circle"></i>&nbsp;Current: {{ selectedEvent.booked_seats }}</span>
                   <span class="amount-label amount-right"><i class="bi bi-people-fill"></i>&nbsp;Available: {{ selectedEvent.available_seats }}</span>
                 </div>
-                <span class="amount-label calen"><i class="bi bi-calendar-check"></i>&nbsp;Deadline: {{ selectedEvent.event_date | date:'longDate' }}</span>
+                <span class="amount-label calen"><i class="bi bi-calendar-check"></i>&nbsp;Event Date: {{ selectedEvent.event_date | date:'longDate' }}</span>
                 <br>
               </div>
             </div>
@@ -191,11 +191,11 @@
 </div>
 
 <!-- edit pot modal -->
-<div class="modal fade" id="editPotModal" tabindex="-1" aria-labelledby="editPotModalLabel" aria-hidden="true">
+<div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editPotModalLabel">Edit Event</h5>
+        <h5 class="modal-title" id="editEventModalLabel">Edit Event</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -219,28 +219,28 @@
           <div class="row">
             <div class="col">
               <div class="mb-3">
-                <label for="target_amount_e" class="form-label">Target Amount</label>
-                <input type="number" class="form-control" id="target_amount_e" name="target_amount" formControlName="target_amount">
-                <div *ngIf="eventEditForm.get('target_amount')?.invalid" class="text-danger">
-                  <div *ngIf="eventEditForm.get('target_amount')?.hasError('required')">Target Amount is required.</div>
-                  <div *ngIf="eventEditForm.get('target_amount')?.hasError('min')">Target Amount should be superior to 0.</div>
+                <label for="available_seats_e" class="form-label">Available Seats</label>
+                <input type="number" class="form-control" id="available_seats_e" name="available_seats" formControlName="available_seats">
+                <div *ngIf="eventEditForm.get('available_seats')?.invalid" class="text-danger">
+                  <div *ngIf="eventEditForm.get('available_seats')?.hasError('required')">Available seats is required.</div>
+                  <div *ngIf="eventEditForm.get('available_seats')?.hasError('min')">Seats should be superior to 0.</div>
                 </div>
               </div>
             </div>
             <div class="col">
               <div class="mb-3">
-                <label for="deadline_e" class="form-label">Deadline</label>
+                <label for="event_date_e" class="form-label">Event Date</label>
                 <input
                   type="date"
                   class="form-control"
-                  id="deadline_e"
-                  name="deadline"
-                  formControlName="deadline"
+                  id="event_date_e"
+                  name="event_date"
+                  formControlName="event_date"
                   [min]="minDate()"
                   required
                 />
-                <div *ngIf="eventEditForm.get('deadline')?.invalid" class="text-danger">
-                  <div *ngIf="eventEditForm.get('deadline')?.hasError('required')">Deadline is required.</div>
+                <div *ngIf="eventEditForm.get('event_date')?.invalid" class="text-danger">
+                  <div *ngIf="eventEditForm.get('event_date')?.hasError('required')">Event Date is required.</div>
                 </div>
               </div>
             </div>
@@ -302,6 +302,8 @@
     </div>
   </div>
 </div>
+
+<app-footer></app-footer>
 
 
 

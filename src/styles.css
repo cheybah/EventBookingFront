@@ -7,3 +7,9 @@ h5,
 h6 {
   font-family: "Raleway", sans-serif;
 }
+
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+.progress-bar {
+  background-color: #917e6b !important;
+}
