@@ -31,13 +31,20 @@ export class LoginClientComponent {
 
               // Check if the role exists in the response and store it
               if (response.user && response.user.role) {
+
                 localStorage.setItem('userRole', response.user.role);
+
+                // Redirect based on role
+                if (response.user.role === 'ADMIN') {
+                  this.router.navigate(['/admin/dashboard']);
+                } else if (response.user.role === 'CLIENT') {
+                  this.router.navigate(['/client/dashboard']);
+                } else {
+                  console.error('Unknown role:', response.user.role);
+                }
               } else {
                 console.error('Role not found in the response');
               }
-
-
-              this.router.navigate(['/client/dashboard']); // Update the route here
             },
             error => {
               console.error('Login failed', error);
