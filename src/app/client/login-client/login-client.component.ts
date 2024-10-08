@@ -37,7 +37,7 @@ export class LoginClientComponent {
               }
 
 
-              this.router.navigate(['/home']); // Navigate to home or another route on success
+              this.router.navigate(['/client/dashboard']); // Update the route here
             },
             error => {
               console.error('Login failed', error);

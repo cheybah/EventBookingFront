@@ -1,0 +1,8 @@
+.cta {
+  background: linear-gradient(rgba(2, 2, 2, 0.5), rgba(0, 0, 0, 0.5)), url(../../../assets/img/hero/hero-2.jpg) fixed center center;
+  background-size: cover;
+  padding: 0px 0;
+  height: 115px;
+  margin-top: 25px;
+  margin-bottom: 35px;
+}

@@ -1,0 +1,104 @@
+<header class="header-section">
+  <div class="top-nav">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <ul class="tn-left">
+            <li><i class="fa fa-phone"></i> (216) 99 888 777</li>
+            <li><i class="fa fa-envelope"></i> event.booking&#64;info.com</li>
+          </ul>
+        </div>
+        <div class="col-lg-6">
+          <div class="tn-right">
+            <div class="top-social">
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="#"><i class="fa fa-twitter"></i></a>
+              <a href="#"><i class="fa fa-tripadvisor"></i></a>
+              <a href="#"><i class="fa fa-instagram"></i></a>
+            </div>
+            <a href="#" class="bk-btn" [routerLink]="['/client/login']">Booking Now</a>
+            <div class="language-option">
+              <img src="../../../assets/img/flag.jpg" alt="">
+              <span>EN <i class="fa fa-angle-down"></i></span>
+              <div class="flag-dropdown">
+                <ul>
+                  <li><a href="#">Fr</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2">
+          <div class="logo">
+            <a href="./index.html">
+              <img src="../../../assets/img/logo.png" alt="">
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-10">
+          <div class="nav-menu">
+            <nav class="mainmenu">
+              <ul>
+                <li class="active"><a href="./index.html">Dashboard</a></li>
+                <li><a (click)="logOut()">Log Out</a></li>
+              </ul>
+            </nav>
+            <div class="nav-right search-switch">
+              <i class="icon_search"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!--End Header-->
+<!--event details-->
+<section id="eventdetails" class="d-flex align-items-center">
+  <div class="container position-relative" *ngIf="event">
+    <div class="pot-container row">
+      <div class="col-lg-6">
+        <!-- Image container -->
+        <div class="w-100 shadow img" [ngClass]="{'custom-bg': event.img}" [ngStyle]="{'background-image': 'url(' + event.img + ')', 'background-size': 'cover', 'background-position': 'center', 'height': '300px'}">
+        </div>
+
+        <!-- Description container -->
+        <div class="pot-container1 p-5 mt-4">
+          <h5>Description</h5>
+          <p>{{ event.description }}</p>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="pot-container1 p-5 mt-4">
+          <div class="pot-header">
+            <h2><b>{{ event.name }}</b></h2>
+          </div>
+          <h5 class="mt-4">Category</h5>
+          <p>{{ event.category }}</p>
+          <h6 class="mt-4">Booking availability</h6>
+          <div class="progress-container">
+            <span class="progress-bar">
+              <span class="progress-indicator" [style.width]="calculateProgress(event)"></span>
+            </span>
+          </div>
+          <div class="amount-label-container">
+            <span class="amount-label amount-left"><i class="bi bi-cash-stack"></i> Booked: {{ event.booked_seats }}</span>
+            <span class="amount-label amount-right"><i class="bi bi-bullseye"></i> Available: {{ event.available_seats }}</span>
+          </div>
+          <span class="amount-label calen"><i class="bi bi-calendar-check"></i> Event Date: {{ event.event_date | date:'longDate' }}</span>
+          <br>
+          <div class="form-group donation-input">
+            <button type="button" class="btn btn-primary" (click)="redirectToClickToPay()">Proceed Payment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

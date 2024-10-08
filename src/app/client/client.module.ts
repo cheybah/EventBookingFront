@@ -6,13 +6,19 @@ import { LoginClientComponent } from './login-client/login-client.component';
 import { HomeModule } from "../home/home.module";
 import { SignupClientComponent } from './signup-client/signup-client.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DashboardClientComponent } from './dashboard-client/dashboard-client.component';
+import { EventDetailsComponent } from './event-details/event-details.component';
+import { ClicktopayformComponent } from './clicktopayform/clicktopayform.component';
 
 
 
 @NgModule({
   declarations: [
     LoginClientComponent,
-    SignupClientComponent
+    SignupClientComponent,
+    DashboardClientComponent,
+    EventDetailsComponent,
+    ClicktopayformComponent
   ],
   imports: [
     CommonModule,
